@@ -8,9 +8,9 @@ class Node(NodeMixin):
                 arguments.append(f'{arg.name}: {arg.value}')
 
         return u'<%s%s%s%s>' % (
-            f'{self.alias}:' if hasattr(self, 'alias') else '',
+            f'{self.alias}:' if hasattr(self, 'alias') and self.alias else '',
             self.__class__.__name__,
-            f' {self.name}' if hasattr(self, 'name') else '',
+            f' {self.name}' if hasattr(self, 'name') and self.name else '',
             '(%s)' % ', '.join(arguments) if arguments else ''
         )
 
