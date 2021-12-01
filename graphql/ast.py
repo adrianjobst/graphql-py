@@ -1,17 +1,16 @@
 from anytree import NodeMixin, PreOrderIter
 
-class Node(NodeMixin, object):
+class Node(NodeMixin):
     def __str__(self):
-        children = []
-        for k, v in self.__dict__.items():
-            if v:
-                if isinstance(v, (list, tuple)):
-                    v = '[%s]' % ', '.join([str(v) for v in v if v])
-                children.append('%s=%s' % (k, v))
+        arguments = []
+        if hasattr(self, 'arguments'):
+            for arg in self.arguments:
+                arguments.append(f'{arg.name}: {arg.value}')
+
         return u'<%s%s%s>' % (
             self.__class__.__name__,
-            ': ' if children else '',
-            ', '.join(children),
+            f' {self.name}' if hasattr(self, 'name') else '',
+            '(%s)' % ', '.join(arguments) if arguments else ''
         )
 
     __repr__ = __str__
@@ -33,7 +32,7 @@ class Node(NodeMixin, object):
             for arg in self.arguments:
                 if arg.name == 'first':
                     return True
-                    
+
         return False
 
     @property
