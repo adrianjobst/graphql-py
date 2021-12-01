@@ -19,6 +19,8 @@ class Node(NodeMixin):
         if not isinstance(other, self.__class__):
             return False
         for k, v in self.__dict__.items():
+            if isinstance(v, (list, tuple)) and not k=='arguments':
+                continue
             if getattr(other, k) != v:
                 return False
         return True
