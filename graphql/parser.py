@@ -33,7 +33,24 @@ class GraphQLParser(object):
 
     def parse(self, input=None, lexer=None, **kwargs):
         lexer = lexer or self.default_lexer
-        return self.yacc.parse(input=input, lexer=lexer, **kwargs)
+        doc = self.yacc.parse(input=input, lexer=lexer, **kwargs)
+
+        # Set parents of every child for anytree
+        stack = [doc]
+        while stack:
+            current = stack.pop(0)
+            if hasattr(current, 'selections'):
+                children = current.selections
+            elif hasattr(current, 'definitions'):
+                children = current.definitions
+            else:
+                continue
+
+            for child in children:
+                child.parent = current
+                stack.append(child)
+
+        return doc
 
     start = 'document'
 
