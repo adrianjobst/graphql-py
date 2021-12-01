@@ -1,4 +1,6 @@
-class Node(object):
+from anytree import NodeMixin, PreOrderIter
+
+class Node(NodeMixin, object):
     def __str__(self):
         children = []
         for k, v in self.__dict__.items():
@@ -24,6 +26,23 @@ class Node(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    @property
+    def is_paginated(self) -> bool:
+        if hasattr(self, 'arguments'):
+            for arg in self.arguments:
+                if arg.name == 'first':
+                    return True
+                    
+        return False
+
+    @property
+    def has_paginated_descendant(self) -> bool:
+        for node in PreOrderIter(self):
+            if node is not self and node.is_paginated:
+                return True
+
+        return False
 
 
 class Document(Node):
