@@ -7,7 +7,8 @@ class Node(NodeMixin):
             for arg in self.arguments:
                 arguments.append(f'{arg.name}: {arg.value}')
 
-        return u'<%s%s%s>' % (
+        return u'<%s%s%s%s>' % (
+            f'{self.alias}:' if hasattr(self, 'alias') else '',
             self.__class__.__name__,
             f' {self.name}' if hasattr(self, 'name') else '',
             '(%s)' % ', '.join(arguments) if arguments else ''
